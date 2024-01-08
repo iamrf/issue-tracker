@@ -1,8 +1,9 @@
-import { Button, Table, TableColumnHeaderCell } from '@radix-ui/themes'
+import { Badge, Button, Table, TableColumnHeaderCell } from '@radix-ui/themes'
 import Link from 'next/link'
 import React from 'react'
 import dbConnect from '../lib/dbConnect'
 import Issue from '../models/Issue'
+import IssueStatusBadge from '../components/IssueStatusBadge'
 
 const IssuesPage = async () => {
     await dbConnect();
@@ -21,7 +22,7 @@ const IssuesPage = async () => {
                         <TableColumnHeaderCell className='hidden md:table-cell'>
                             Status
                         </TableColumnHeaderCell>
-                        <TableColumnHeaderCell>
+                        <TableColumnHeaderCell className='hidden md:table-cell'>
                             Description
                         </TableColumnHeaderCell>
                         <TableColumnHeaderCell className='hidden md:table-cell'>
@@ -34,12 +35,14 @@ const IssuesPage = async () => {
                         return <Table.Row key={issue._id}>
                             <Table.RowHeaderCell>
                                 {issue.title}
-                                <div className='block md:hidden text-xs'>{issue.status}</div>
+                                <div className='block md:hidden text-xs'>
+                                    <IssueStatusBadge status={issue.status} />
+                                </div>
                             </Table.RowHeaderCell>
                             <Table.RowHeaderCell className='hidden md:table-cell'>
-                                {issue.status}
+                                <IssueStatusBadge status={issue.status} />
                             </Table.RowHeaderCell>
-                            <Table.RowHeaderCell>
+                            <Table.RowHeaderCell className='hidden md:table-cell'>
                                 {issue.description}
                             </Table.RowHeaderCell>
                             <Table.RowHeaderCell className='hidden md:table-cell'>
