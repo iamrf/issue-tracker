@@ -1,13 +1,8 @@
 import dbConnect from "@/app/lib/dbConnect";
 import Issue, { Issues } from "@/app/models/Issue";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import _ from "lodash";
-
-const createIssueSchema = z.object({
-    title: z.string().min(1, "title is required").max(255),
-    description: z.string(),
-});
+import { createIssueSchema } from "@/app/validationSchemas";
 
 export async function POST(request: NextRequest, response: NextResponse) {
     const senderIp = request.headers.get("x-forwarded-for");
