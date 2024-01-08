@@ -1,14 +1,13 @@
-import { Badge, Button, Table, TableColumnHeaderCell } from '@radix-ui/themes'
-import Link from 'next/link'
+import { Table, TableColumnHeaderCell } from '@radix-ui/themes'
 import React from 'react'
-import dbConnect from '../lib/dbConnect'
-import Issue from '../models/Issue'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import IssueStatusBadge from '../components/IssueStatusBadge'
 import IssueActions from './IssueActions'
 
-const IssuesPage = async () => {
-    await dbConnect();
-    const issues = await Issue.find();
+const LoadingIssuePage = () => {
+    const issues = [1, 2, 3, 4, 5]
+
     return (
         <div>
             <IssueActions />
@@ -31,21 +30,18 @@ const IssuesPage = async () => {
                 </Table.Header>
                 <Table.Body>
                     {issues.map(issue => {
-                        return <Table.Row key={issue._id}>
+                        return <Table.Row key={issue}>
                             <Table.RowHeaderCell>
-                                {issue.title}
-                                <div className='block md:hidden text-xs'>
-                                    <IssueStatusBadge status={issue.status} />
-                                </div>
+                                <Skeleton />
                             </Table.RowHeaderCell>
                             <Table.RowHeaderCell className='hidden md:table-cell'>
-                                <IssueStatusBadge status={issue.status} />
+                                <Skeleton />
                             </Table.RowHeaderCell>
                             <Table.RowHeaderCell className='hidden md:table-cell'>
-                                {issue.description}
+                                <Skeleton />
                             </Table.RowHeaderCell>
                             <Table.RowHeaderCell className='hidden md:table-cell'>
-                                {issue.createdAt.toDateString()}
+                                <Skeleton />
                             </Table.RowHeaderCell>
                         </Table.Row>
                     })}
@@ -55,4 +51,4 @@ const IssuesPage = async () => {
     )
 }
 
-export default IssuesPage
+export default LoadingIssuePage
