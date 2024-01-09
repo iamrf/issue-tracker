@@ -2,7 +2,6 @@ import { Table, TableColumnHeaderCell } from '@radix-ui/themes'
 import React from 'react'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import IssueStatusBadge from '../components/IssueStatusBadge'
 import IssueActions from './IssueActions'
 
 const LoadingIssuePage = () => {
