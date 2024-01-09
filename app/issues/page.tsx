@@ -1,11 +1,11 @@
-import { Badge, Button, Table, TableColumnHeaderCell } from '@radix-ui/themes'
-import Link from 'next/link'
+import { Table, TableColumnHeaderCell } from '@radix-ui/themes'
 import React from 'react'
 import dbConnect from '../lib/dbConnect'
 import Issue from '../models/Issue'
 import IssueStatusBadge from '../components/IssueStatusBadge'
 import IssueActions from './IssueActions'
 import { Metadata } from 'next'
+import Link from '@/app/components/Link'
 
 export const metadata: Metadata = {
     title: 'Issues',
