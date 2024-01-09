@@ -5,6 +5,11 @@ import dbConnect from '../lib/dbConnect'
 import Issue from '../models/Issue'
 import IssueStatusBadge from '../components/IssueStatusBadge'
 import IssueActions from './IssueActions'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Issues',
+}
 
 const IssuesPage = async () => {
     await dbConnect();
