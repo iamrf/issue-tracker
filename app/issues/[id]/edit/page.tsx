@@ -1,9 +1,17 @@
-import React from 'react'
-import IssueForm from '../../_components/IssueForm'
 import dbConnect from '@/app/lib/dbConnect'
 import Issue from '@/app/models/Issue'
-import { notFound } from 'next/navigation'
 import mongoose from 'mongoose'
+import dynamic from "next/dynamic"
+import { notFound } from 'next/navigation'
+import IssueFormSkeleton from '../../_components/IssueFormSkeleton'
+
+const IssueForm = dynamic(
+    () => import('@/app/issues/_components/IssueForm'),
+    {
+        ssr: false,
+        loading: () => <IssueFormSkeleton />
+    }
+)
 
 interface Props {
     params: { id: string }
