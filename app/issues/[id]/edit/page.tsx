@@ -17,7 +17,11 @@ const IssueEditPage = async ({ params }: Props) => {
     if (!issue) notFound()
 
     return (
-        <IssueForm issue={issue} />
+        <IssueForm issue={{
+            _id: issue._id.toString(),
+            title: issue.title,
+            description: issue.description
+        }} />
     )
 }
 

@@ -32,8 +32,16 @@ const IssueForm = ({ issue }: { issue?: Issues }) => {
     const onSubmit = handleSubmit(async (data) => {
         try {
             setSubmitting(true)
-            await axios.post('/api/issues', data)
-            router.push('/issues')
+            if (issue) {
+                await axios.patch(`/api/issues/${issue._id}`, data)
+                router.push(`/issues/${issue._id}`)
+                router.refresh()
+            }
+            else {
+                await axios.post('/api/issues', data)
+                router.push('/issues')
+                router.refresh()
+            }
         } catch (error) {
             setSubmitting(false)
             setError('an error occured')
@@ -62,7 +70,10 @@ const IssueForm = ({ issue }: { issue?: Issues }) => {
                     render={({ field }) => <SimpleMDE placeholder="write description" {...field} />}
                 />
                 <ErrorMessage>{errors.description?.message}</ErrorMessage>
-                <Button disabled={isSubmitting}>Submit New Issue {isSubmitting && <Spinner />}</Button>
+                <Button disabled={isSubmitting}>
+                    {issue ? 'Edit Issue' : 'Submit New Issue'}
+                    {isSubmitting && <Spinner />}
+                </Button>
             </form>
         </div>
     )

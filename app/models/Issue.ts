@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 export interface Issues {
+    _id: ObjectId;
     title: string;
     description: string;
     status: "OPEN" | "CLOSED" | "IN_PROGRESS";
