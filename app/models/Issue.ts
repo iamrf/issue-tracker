@@ -4,8 +4,7 @@ export interface Issues {
     title: string;
     description: string;
     status: "OPEN" | "CLOSED" | "IN_PROGRESS";
-    createdAt: Date;
-    updatedAt: Date;
+    save: () => void;
 }
 
 /* IssueSchema will correspond to a collection in your MongoDB database. */
