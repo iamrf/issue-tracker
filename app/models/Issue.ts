@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 export interface Issues {
     title: string;
     description: string;
-    status: string;
+    status: "OPEN" | "CLOSED" | "IN_PROGRESS";
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 /* IssueSchema will correspond to a collection in your MongoDB database. */
