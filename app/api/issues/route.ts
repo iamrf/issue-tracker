@@ -22,3 +22,14 @@ export async function POST(request: NextRequest, response: NextResponse) {
         return NextResponse.json(ex, { status: 400 });
     }
 }
+
+export async function GET(request: NextRequest, response: NextResponse) {
+    await dbConnect();
+    try {
+        const issues = await Issue.find();
+        console.log(issues);
+        return NextResponse.json(issues, { status: 200 });
+    } catch (error) {
+        return NextResponse.json(error, { status: 400 });
+    }
+}
