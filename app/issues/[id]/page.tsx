@@ -1,11 +1,12 @@
 import dbConnect from '@/app/lib/dbConnect'
 import Issue from '@/app/models/Issue'
-import { Box, Grid } from '@radix-ui/themes'
+import { Box, Flex, Grid } from '@radix-ui/themes'
 import mongoose from 'mongoose'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import ButtonIssueEdit from './ButtonIssueEdit'
 import IssueDetails from './IssueDetails'
+import ButtonIssueDelete from './ButtonIssueDelete'
 
 export const metadata: Metadata = {
     title: 'Issue Detail Page',
@@ -24,12 +25,15 @@ const IssueDetailPage = async ({ params }: Props) => {
     if (!issue) notFound();
 
     return (
-        <Grid columns={{ initial: "1", md: "2" }} gap='4' >
-            <Box className='space-y-4'>
+        <Grid columns={{ initial: "1", sm: "5" }} gap='4' >
+            <Box className='md:col-span-4'>
                 <IssueDetails issue={issue} />
             </Box>
             <Box>
-                <ButtonIssueEdit issueId={issue.id} />
+                <Flex direction="column" gap="4">
+                    <ButtonIssueEdit issueId={issue.id} />
+                    <ButtonIssueDelete issueId={issue.id} />
+                </Flex>
             </Box>
         </Grid>
     )
