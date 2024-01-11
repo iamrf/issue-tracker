@@ -23,3 +23,15 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
         return NextResponse.json(error, { status: 400 })
     }
 }
+
+export async function DELETE(rquest: NextRequest, { params }: { params: { id: string } }) {
+    if (!mongoose.Types.ObjectId.isValid(params.id)) return NextResponse.json('not found', { status: 404 })
+
+    await dbConnect()
+    try {
+        const issue = await Issue.findByIdAndDelete(params.id)
+        return NextResponse.json(`issue ${params.id} deleted`, { status: 200 })
+    } catch (error) {
+        return NextResponse.json(error, { status: 400 })
+    }
+}
