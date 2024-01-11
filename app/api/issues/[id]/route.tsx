@@ -29,7 +29,7 @@ export async function DELETE(rquest: NextRequest, { params }: { params: { id: st
 
     await dbConnect()
     try {
-        const issue = await Issue.findByIdAndDelete(params.id)
+        await Issue.findByIdAndDelete(params.id)
         return NextResponse.json(`issue ${params.id} deleted`, { status: 200 })
     } catch (error) {
         return NextResponse.json(error, { status: 400 })
