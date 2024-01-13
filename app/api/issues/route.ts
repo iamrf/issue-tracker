@@ -3,8 +3,13 @@ import Issue, { Issues } from "@/app/models/Issue";
 import { NextRequest, NextResponse } from "next/server";
 import _ from "lodash";
 import { IssueSchema } from "@/app/validationSchemas";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/auth/authOptions";
 
 export async function POST(request: NextRequest, response: NextResponse) {
+    const session = await getServerSession(authOptions);
+    if (!session) return NextResponse.json("Unauthorized", { status: 401 });
+
     const senderIp = request.headers.get("x-forwarded-for");
     const body = await request.json();
     const validation = IssueSchema.safeParse(body);

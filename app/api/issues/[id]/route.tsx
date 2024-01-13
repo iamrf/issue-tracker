@@ -1,10 +1,15 @@
+import authOptions from "@/app/auth/authOptions";
 import dbConnect from "@/app/lib/dbConnect";
 import Issue, { Issues } from "@/app/models/Issue";
 import { IssueSchema } from "@/app/validationSchemas";
 import mongoose from "mongoose";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+    const session = await getServerSession(authOptions)
+    if (!session) return NextResponse.json("Unauthorized", { status: 4011 })
+
     if (!mongoose.Types.ObjectId.isValid(params.id)) return NextResponse.json("not found", { status: 404 })
 
     const body = await request.json()
@@ -25,6 +30,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 }
 
 export async function DELETE(rquest: NextRequest, { params }: { params: { id: string } }) {
+    const session = await getServerSession(authOptions)
+    if (!session) return NextResponse.json("Unauthorized", { status: 401 })
+
     if (!mongoose.Types.ObjectId.isValid(params.id)) return NextResponse.json('not found', { status: 404 })
 
     await dbConnect()

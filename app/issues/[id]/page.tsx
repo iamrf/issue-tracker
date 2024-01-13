@@ -7,6 +7,8 @@ import { notFound } from 'next/navigation'
 import ButtonIssueEdit from './ButtonIssueEdit'
 import IssueDetails from './IssueDetails'
 import ButtonIssueDelete from './ButtonIssueDelete'
+import { getServerSession } from 'next-auth'
+import authOptions from '@/app/auth/authOptions'
 
 export const metadata: Metadata = {
     title: 'Issue Detail Page',
@@ -17,6 +19,8 @@ interface Props {
 }
 
 const IssueDetailPage = async ({ params }: Props) => {
+    const session = await getServerSession(authOptions)
+
     if (!mongoose.Types.ObjectId.isValid(params.id)) notFound()
 
     await dbConnect()
@@ -29,12 +33,14 @@ const IssueDetailPage = async ({ params }: Props) => {
             <Box className='md:col-span-4'>
                 <IssueDetails issue={issue} />
             </Box>
-            <Box>
-                <Flex direction="column" gap="4">
-                    <ButtonIssueEdit issueId={issue.id} />
-                    <ButtonIssueDelete issueId={issue.id} issueTitle={issue.title} />
-                </Flex>
-            </Box>
+            {session &&
+                <Box>
+                    <Flex direction="column" gap="4">
+                        <ButtonIssueEdit issueId={issue.id} />
+                        <ButtonIssueDelete issueId={issue.id} issueTitle={issue.title} />
+                    </Flex>
+                </Box>
+            }
         </Grid>
     )
 }
