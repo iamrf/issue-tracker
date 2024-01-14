@@ -9,6 +9,7 @@ import IssueDetails from './IssueDetails'
 import ButtonIssueDelete from './ButtonIssueDelete'
 import { getServerSession } from 'next-auth'
 import authOptions from '@/app/auth/authOptions'
+import AssigneeSelect from './AssigneeSelect'
 
 export const metadata: Metadata = {
     title: 'Issue Detail Page',
@@ -36,6 +37,7 @@ const IssueDetailPage = async ({ params }: Props) => {
             {session &&
                 <Box>
                     <Flex direction="column" gap="4">
+                        <AssigneeSelect />
                         <ButtonIssueEdit issueId={issue.id} />
                         <ButtonIssueDelete issueId={issue.id} issueTitle={issue.title} />
                     </Flex>
