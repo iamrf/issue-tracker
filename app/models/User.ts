@@ -6,6 +6,7 @@ export interface Users {
     email: string;
     password: string;
     image: string;
+    issues: [mongoose.Types.ObjectId];
     save: () => void;
 }
 
@@ -31,6 +32,12 @@ const UserSchema = new mongoose.Schema<Users>(
         image: {
             type: String,
         },
+        issues: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Issue",
+            },
+        ],
     },
     { timestamps: true }
 );

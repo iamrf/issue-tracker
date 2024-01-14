@@ -1,10 +1,11 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose, { ObjectId, Schema } from "mongoose";
 
 export interface Issues {
     _id: ObjectId;
     title: string;
     description: string;
     status: "OPEN" | "CLOSED" | "IN_PROGRESS";
+    assignedToUser: Schema.Types.ObjectId;
     save: () => void;
 }
 
@@ -27,6 +28,10 @@ const IssueSchema = new mongoose.Schema<Issues>(
             type: String,
             enum: ["OPEN", "CLOSED", "IN_PROGRESS"],
             default: "OPEN",
+        },
+        assignedToUser: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
         },
     },
     { timestamps: true }
