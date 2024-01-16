@@ -1,8 +1,8 @@
 'use client'
 import { ErrorMessage, Spinner } from '@/app/components';
-import { Issues } from '@/app/models/Issue';
 import { IssueSchema } from '@/app/validationSchemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Issue } from '@prisma/client';
 import { Button, Callout, TextField } from '@radix-ui/themes';
 import axios from 'axios';
 import "easymde/dist/easymde.min.css";
@@ -18,7 +18,7 @@ import { z } from 'zod';
 // }
 type IssueFormData = z.infer<typeof IssueSchema>;
 
-const IssueForm = ({ issue }: { issue?: Issues }) => {
+const IssueForm = ({ issue }: { issue?: Issue }) => {
     const router = useRouter()
     const { register, control, handleSubmit, formState: { errors } } = useForm<IssueFormData>({ resolver: zodResolver(IssueSchema) })
     const [error, setError] = useState('')
@@ -28,8 +28,8 @@ const IssueForm = ({ issue }: { issue?: Issues }) => {
         try {
             setSubmitting(true)
             if (issue) {
-                await axios.patch(`/api/issues/${issue._id}`, data)
-                router.push(`/issues/${issue._id}`)
+                await axios.patch(`/api/issues/${issue.id}`, data)
+                router.push(`/issues/${issue.id}`)
                 router.refresh()
             }
             else {

@@ -1,17 +1,15 @@
 import { IssueStatusBadge, Link } from '@/app/components'
 import { Table, TableColumnHeaderCell } from '@radix-ui/themes'
 import { Metadata } from 'next'
-import dbConnect from '../lib/dbConnect'
-import Issue from '../models/Issue'
 import IssueActions from './IssueActions'
+import prisma from '@/prisma/client'
 
 export const metadata: Metadata = {
     title: 'Issues',
 }
 
 const IssuesPage = async () => {
-    await dbConnect();
-    const issues = await Issue.find();
+    const issues = await prisma.issue.findMany()
     return (
         <div>
             <IssueActions />
@@ -34,9 +32,9 @@ const IssuesPage = async () => {
                 </Table.Header>
                 <Table.Body>
                     {issues.map(issue => {
-                        return <Table.Row key={issue._id}>
+                        return <Table.Row key={issue.id}>
                             <Table.RowHeaderCell>
-                                <Link href={`/issues/${issue._id}`}>
+                                <Link href={`/issues/${issue.id}`}>
                                     {issue.title}
                                 </Link>
                                 <div className='block md:hidden text-xs'>

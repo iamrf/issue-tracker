@@ -1,6 +1,4 @@
-import dbConnect from '@/app/lib/dbConnect'
-import Issue from '@/app/models/Issue'
-import mongoose from 'mongoose'
+import prisma from '@/prisma/client'
 import dynamic from "next/dynamic"
 import { notFound } from 'next/navigation'
 import IssueFormSkeleton from '../../_components/IssueFormSkeleton'
@@ -18,18 +16,14 @@ interface Props {
 }
 
 const IssueEditPage = async ({ params }: Props) => {
-    if (!mongoose.Types.ObjectId.isValid(params.id)) notFound()
-    await dbConnect()
-    const issue = await Issue.findById(params.id)
+    const issue = await prisma.issue.findUnique({
+        where: { id: parseInt(params.id) }
+    })
 
     if (!issue) notFound()
 
     return (
-        <IssueForm issue={{
-            _id: issue._id.toString(),
-            title: issue.title,
-            description: issue.description
-        }} />
+        <IssueForm issue={issue} />
     )
 }
 
