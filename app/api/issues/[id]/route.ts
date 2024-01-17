@@ -12,12 +12,16 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     const validation = PatchIssueSchema.safeParse(body);
     if (!validation.success) return NextResponse.json(validation.error.errors, { status: 400 });
 
-    const { title, description } = body;
+    const { title, description, userId } = body;
+
+    if (userId) {
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) return NextResponse.json({ error: "Invalid user" }, { status: 404 });
+    }
 
     const issue = await prisma.issue.findUnique({
         where: { id: parseInt(params.id) },
     });
-
     if (!issue) return NextResponse.json({ error: "Invalid issue" }, { status: 404 });
 
     const updatedIssue = await prisma.issue.update({
@@ -25,6 +29,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
         data: {
             title,
             description,
+            userId,
         },
     });
 
