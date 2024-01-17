@@ -7,27 +7,22 @@ import axios from 'axios'
 import toast, { Toaster } from "react-hot-toast"
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
-    const { data: users, error, isLoading } = useQuery<User[]>({
-        queryKey: ['users'],
-        queryFn: () => axios.get('/api/users').then(res => res.data),
-        staleTime: 60 * 1000,
-        retry: 3
-    })
+    const { data: users, error, isLoading } = useUsers()
+
+    const assignIssue = (userId: string) => {
+        toast.promise(axios.patch(`/api/issues/${issue.id}`, userId === "remove" ? { userId: null } : { userId: userId }), {
+            loading: 'Loading ...',
+            success: 'User assigned Succesfuly',
+            error: 'Error when fetching',
+        });
+    }
 
     if (isLoading) return <Skeleton height="2rem" />
     if (error) return null
 
     return (
         <>
-            <Select.Root defaultValue={issue.userId || "remove"} onValueChange={(userId) => {
-                axios.patch(`/api/issues/${issue.id}`, userId === "remove" ? { userId: null } : { userId: userId })
-                    .then(() => {
-                        toast.success('success added ')
-                    })
-                    .catch(() => {
-                        toast.error('Changes could not be applied')
-                    })
-            }}>
+            <Select.Root defaultValue={issue.userId || "remove"} onValueChange={assignIssue}>
                 <Select.Trigger placeholder='Assign ...' />
                 <Select.Content>
                     <Select.Group>
@@ -43,5 +38,12 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
         </>
     )
 }
+
+const useUsers = () => useQuery<User[]>({
+    queryKey: ['users'],
+    queryFn: () => axios.get('/api/users').then(res => res.data),
+    staleTime: 60 * 1000,
+    retry: 3
+})
 
 export default AssigneeSelect
