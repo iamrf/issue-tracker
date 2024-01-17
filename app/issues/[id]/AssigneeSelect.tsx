@@ -17,15 +17,16 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     if (error) return null
 
     return (
-        <Select.Root onValueChange={(userId) => {
-            axios.patch(`/api/issues/${issue.id}`, { userId: userId })
+        <Select.Root defaultValue={issue.userId || "remove"} onValueChange={(userId) => {
+            axios.patch(`/api/issues/${issue.id}`, userId === "remove" ? { userId: null } : { userId: userId })
         }}>
             <Select.Trigger placeholder='Assign ...' />
             <Select.Content>
                 <Select.Group>
                     <Select.Label>Suggestions</Select.Label>
+                    <Select.Item value="remove">- UnAssigned</Select.Item>
                     {users?.map(user => (
-                        <Select.Item key={user.id.toString()} value={user.id.toString()}>{user.name}</Select.Item>
+                        <Select.Item key={user.id} value={user.id}>{user.name}</Select.Item>
                     ))}
                 </Select.Group>
             </Select.Content>
