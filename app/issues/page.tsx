@@ -1,19 +1,32 @@
 import { IssueStatusBadge, Link } from '@/app/components'
+import prisma from '@/prisma/client'
+import { Issue, Status } from '@prisma/client'
 import { Table, TableColumnHeaderCell } from '@radix-ui/themes'
 import { Metadata } from 'next'
 import IssueActions from './IssueActions'
-import prisma from '@/prisma/client'
-import { Status } from '@prisma/client'
+import NextLink from "next/link"
+import { PiArrowUp } from 'react-icons/pi'
 
 export const metadata: Metadata = {
     title: 'Issues',
 }
 
 interface Props {
-    searchParams: { status: Status }
+    searchParams: { status: Status, orderBy: keyof Issue }
 }
 
 const IssuesPage = async ({ searchParams }: Props) => {
+
+    const columns: {
+        label: string;
+        value: keyof Issue;
+        className?: string
+    }[] = [
+            { label: 'Issue', value: 'title' },
+            { label: 'Status', value: 'status', className: 'hidden md:table-cell' },
+            { label: 'Description', value: 'description', className: 'hidden md:table-cell' },
+            { label: 'Created', value: 'createdAt', className: 'hidden md:table-cell' },
+        ]
 
     const statuses = Object.values(Status)
     const status = statuses.includes(searchParams.status) ? searchParams.status : undefined
@@ -28,18 +41,14 @@ const IssuesPage = async ({ searchParams }: Props) => {
             <Table.Root variant="surface">
                 <Table.Header>
                     <Table.Row>
-                        <TableColumnHeaderCell>
-                            Issue
-                        </TableColumnHeaderCell>
-                        <TableColumnHeaderCell className='hidden md:table-cell'>
-                            Status
-                        </TableColumnHeaderCell>
-                        <TableColumnHeaderCell className='hidden md:table-cell'>
-                            Description
-                        </TableColumnHeaderCell>
-                        <TableColumnHeaderCell className='hidden md:table-cell'>
-                            Created
-                        </TableColumnHeaderCell>
+                        {columns.map(col => (
+                            <TableColumnHeaderCell key={col.value} className={col.className}>
+                                <NextLink href={{
+                                    query: { ...searchParams, orderBy: col.value }
+                                }}>{col.label}</NextLink>
+                                {col.value === searchParams.orderBy && <PiArrowUp className="ml-2 inline" />}
+                            </TableColumnHeaderCell>
+                        ))}
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
