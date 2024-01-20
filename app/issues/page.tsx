@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 }
 
 interface Props {
-    searchParams: { status: Status, orderBy: keyof Issue }
+    searchParams: { status: Status, orderBy: keyof Issue, page: string }
 }
 
 const IssuesPage = async ({ searchParams }: Props) => {
@@ -81,7 +81,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
                 </Table.Body>
             </Table.Root>
 
-            <Pagination itemCount={100} pageSize={10} currentPage={2} />
+            <Pagination itemCount={100} pageSize={10} currentPage={parseInt(searchParams.page)} />
         </div>
     )
 }
