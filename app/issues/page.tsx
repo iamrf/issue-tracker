@@ -6,6 +6,7 @@ import { Metadata } from 'next'
 import IssueActions from './IssueActions'
 import NextLink from "next/link"
 import { PiArrowUp } from 'react-icons/pi'
+import Pagination from '../components/Pagination'
 
 export const metadata: Metadata = {
     title: 'Issues',
@@ -79,6 +80,8 @@ const IssuesPage = async ({ searchParams }: Props) => {
                     })}
                 </Table.Body>
             </Table.Root>
+
+            <Pagination itemCount={100} pageSize={10} currentPage={2} />
         </div>
     )
 }
