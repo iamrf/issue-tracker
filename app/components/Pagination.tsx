@@ -24,7 +24,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
     }
 
     return (
-        <Flex my="8" justify="center" align="center" gap="2">
+        <Flex justify="center" align="center" gap="2">
             <Button color="gray" variant="soft" onClick={() => changePage(1)} disabled={currentPage === 1}>
                 <MdKeyboardDoubleArrowLeft />
             </Button>

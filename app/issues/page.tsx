@@ -1,41 +1,26 @@
 import { IssueStatusBadge, Link } from '@/app/components'
 import prisma from '@/prisma/client'
 import { Issue, Status } from '@prisma/client'
-import { Table, TableColumnHeaderCell } from '@radix-ui/themes'
 import { Metadata } from 'next'
 import IssueActions from './IssueActions'
-import NextLink from "next/link"
-import { PiArrowUp } from 'react-icons/pi'
 import Pagination from '../components/Pagination'
+import IssueTable, { IssueQuery, columnNames } from './IssueTable'
+import { Flex } from '@radix-ui/themes'
 
 export const metadata: Metadata = {
     title: 'Issues',
 }
 
 interface Props {
-    searchParams: { status: Status, orderBy: keyof Issue, page: string }
+    searchParams: IssueQuery
 }
 
 const IssuesPage = async ({ searchParams }: Props) => {
-
-    const columns: {
-        label: string;
-        value: keyof Issue;
-        className?: string
-    }[] = [
-            { label: 'Issue', value: 'title' },
-            { label: 'Status', value: 'status', className: 'hidden md:table-cell' },
-            { label: 'Description', value: 'description', className: 'hidden md:table-cell' },
-            { label: 'Created', value: 'createdAt', className: 'hidden md:table-cell' },
-        ]
-
     const statuses = Object.values(Status)
     const status = statuses.includes(searchParams.status) ? searchParams.status : undefined
-    const orderBy = columns.map(col => col.value)
-        .includes(searchParams.orderBy)
-        ? { [searchParams.orderBy]: 'asc' } : undefined
-
     const where = { status }
+    const orderBy = columnNames.includes(searchParams.orderBy)
+        ? { [searchParams.orderBy]: 'asc' } : undefined
 
     const page = parseInt(searchParams.page) || 1
     const pageSize = 10
@@ -50,48 +35,13 @@ const IssuesPage = async ({ searchParams }: Props) => {
     const issueCount = await prisma.issue.count({ where })
 
     return (
-        <div>
+        <Flex direction="column" gap="8">
             <IssueActions />
-            <Table.Root variant="surface">
-                <Table.Header>
-                    <Table.Row>
-                        {columns.map(col => (
-                            <TableColumnHeaderCell key={col.value} className={col.className}>
-                                <NextLink href={{
-                                    query: { ...searchParams, orderBy: col.value }
-                                }}>{col.label}</NextLink>
-                                {col.value === searchParams.orderBy && <PiArrowUp className="ml-2 inline" />}
-                            </TableColumnHeaderCell>
-                        ))}
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {issues.map(issue => {
-                        return <Table.Row key={issue.id}>
-                            <Table.RowHeaderCell>
-                                <Link href={`/issues/${issue.id}`}>
-                                    {issue.title}
-                                </Link>
-                                <div className='block md:hidden text-xs'>
-                                    <IssueStatusBadge status={issue.status} />
-                                </div>
-                            </Table.RowHeaderCell>
-                            <Table.RowHeaderCell className='hidden md:table-cell'>
-                                <IssueStatusBadge status={issue.status} />
-                            </Table.RowHeaderCell>
-                            <Table.RowHeaderCell className='hidden md:table-cell'>
-                                {issue.description}
-                            </Table.RowHeaderCell>
-                            <Table.RowHeaderCell className='hidden md:table-cell'>
-                                {issue.createdAt.toDateString()}
-                            </Table.RowHeaderCell>
-                        </Table.Row>
-                    })}
-                </Table.Body>
-            </Table.Root>
+
+            <IssueTable searchParams={searchParams} issues={issues} />
 
             <Pagination itemCount={issueCount} pageSize={pageSize} currentPage={parseInt(searchParams.page)} />
-        </div>
+        </Flex>
     )
 }
 
