@@ -20,7 +20,7 @@ const IssueSummary = ({ open, inProgress, closed }: Props) => {
             { label: 'Closed Issues', value: closed, status: 'CLOSED' },
         ]
     return (
-        <Grid columns="3" gap="4" mt="8">
+        <Grid columns="3" gap="4">
             {containers.map(container => (
                 <Card key={container.status}>
                     <Flex direction="column" gap="2">

@@ -16,7 +16,7 @@ const IssueChart = ({ open, inProgress, closed }: Props) => {
     ]
 
     return (
-        <Card mt="8">
+        <Card>
             <ResponsiveContainer width="100%" height={400}>
                 <LineChart width={800} height={400} data={data}>
                     <Line type="monotone" dataKey="count" stroke="#8884d8" />
